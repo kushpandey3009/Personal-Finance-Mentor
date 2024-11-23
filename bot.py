@@ -212,7 +212,12 @@ from langchain_community.vectorstores import Chroma  # Changed from langchain_ch
 chroma_client = PersistentClient(
     path=persist_directory
 )
-
+import chromadb
+chroma_client = chromadb.HttpClient(
+    host=os.getenv("DB_HOST"),
+    port=26855,
+    settings=Settings(allow_reset=True, anonymized_telemetry=False),
+)
 # Create the collection
 collection_name = "my_collection"
 # Create vectorstore
