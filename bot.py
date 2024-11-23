@@ -185,16 +185,15 @@ if __name__=='__main__':
     document_embeddings = embedding_function.embed_documents([split.page_content for split in splits])
     print(document_embeddings[0][:5])  # Printing first 5 elements of the first embedding
 
-from langchain_chroma import Chroma
-
+from langchain_community.vectorstores import Chroma
 
 collection_name = "my_collection"
 vectorstore = Chroma.from_documents(
-    collection_name=collection_name,
     documents=splits,
     embedding=embedding_function,
-    persist_directory="./chroma_db"
-    )
+    persist_directory="./chroma_db",
+    collection_name=collection_name
+)
 if __name__=='__main__':
     print("Vector store created and persisted to './chroma_db'")
 
