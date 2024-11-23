@@ -204,7 +204,7 @@ os.makedirs(persist_directory)
 
 import os
 import shutil
-from chromadb import PersistentClient, HttpClient,  # Changed from Client
+from chromadb import PersistentClient, HttpClient  # Changed from Client
 from langchain_community.vectorstores import Chroma  # Changed from langchain_chroma
 
 
