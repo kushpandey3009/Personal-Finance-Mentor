@@ -7,7 +7,7 @@ from datetime import datetime
 from bot import create_application_logs, insert_application_logs, get_chat_history, rag_chain, MODEL
 
 # Initialize database and tables
-create_application_logs()
+# create_application_logs()
 
 # Generate a unique session ID for each user session
 if "session_id" not in st.session_state:
