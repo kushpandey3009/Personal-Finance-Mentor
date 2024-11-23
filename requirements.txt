@@ -108,6 +108,7 @@ propcache==0.2.0
 protobuf==5.28.3
 py_rust_stemmers==0.1.3
 pyarrow==18.0.0
+pysqlite3-binary
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
