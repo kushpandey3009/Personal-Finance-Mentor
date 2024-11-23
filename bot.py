@@ -180,48 +180,48 @@ embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2"
 #     model_kwargs=model_kwargs,
 #     encode_kwargs=encode_kwargs
 # )
-
-if __name__=='__main__':
-    document_embeddings = embedding_function.embed_documents([split.page_content for split in splits])
-    print(document_embeddings[0][:5])  # Printing first 5 elements of the first embedding
-
-from langchain_community.vectorstores import Chroma
-
-
-from chromadb import Client, Settings
-# Initialize ChromaDB with explicit settings
-
-
-persist_directory = "./chroma_db"
+import os
 import shutil
+from chromadb import PersistentClient  # Changed from Client
+from langchain_community.vectorstores import Chroma  # Changed from langchain_chroma
+
+# Define persistence directory
+persist_directory = "./chroma_db"
 
 # Clear existing DB if needed
 if os.path.exists(persist_directory):
     shutil.rmtree(persist_directory)
 os.makedirs(persist_directory)
 
-# Then proceed with the initialization as above
+# Initialize ChromaDB with PersistentClient
+chroma_client = PersistentClient(
+    path=persist_directory
+)
 
-from langchain_chroma import Chroma
-
-
-
-
+# Create the collection
 collection_name = "my_collection"
+# Create vectorstore
 vectorstore = Chroma.from_documents(
-    client=Client(),
-    collection_name=collection_name,
     documents=splits,
     embedding=embedding_function,
-    persist_directory="./chroma_db"
-    )
-if __name__=='__main__':
-    print("Vector store created and persisted to './chroma_db'")
+    persist_directory=persist_directory,
+    collection_name=collection_name,
+    client=chroma_client  # Use the persistent client
+)
 
+# Make sure to persist
+vectorstore.persist()
+
+# Create retriever
 retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
-if __name__=='__main__':
-    retriever_results = retriever.invoke("what is the safest investment option")
-    print(retriever_results)
+
+if __name__ == '__main__':
+    # Test embeddings
+    document_embeddings = embedding_function.embed_documents([split.page_content for split in splits])
+    print(document_embeddings[0][:5])  # Printing first 5 elements of the first embedding
+    
+    print("Vector store created and persisted to './chroma_db'")
+    
 
 # ## storing vector embeddings to vector database (qdrant)
 
