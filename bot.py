@@ -195,6 +195,7 @@ from langchain_chroma import Chroma
 
 collection_name = "my_collection"
 vectorstore = Chroma.from_documents(
+    client=Client(),
     collection_name=collection_name,
     documents=splits,
     embedding=embedding_function,
