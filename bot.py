@@ -188,7 +188,12 @@ if __name__=='__main__':
 from langchain_chroma import Chroma
 import chromadb
 
-client = chromadb.Client(persist_directory='./chroma_db')
+# Initialize the client without persist_directory
+client = chromadb.Client()
+
+# Set the persist directory through configuration (if applicable)
+client.set_persist_directory('./chroma_db')
+
 collection_name = "my_collection"
 vectorstore = Chroma.from_documents(
     collection_name=collection_name,
