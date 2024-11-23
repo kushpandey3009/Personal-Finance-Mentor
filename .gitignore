@@ -1,0 +1,41 @@
+etc
+include
+lib
+log
+tmp
+
+Scripts
+.env
+share
+pyvenv.cfg
+keys.json
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# Build directories
+build/
+dist/
+*.egg-info/
