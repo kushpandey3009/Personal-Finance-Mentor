@@ -193,17 +193,14 @@ from chromadb import Client, Settings
 
 
 persist_directory = "./chroma_db"
-if not os.path.exists(persist_directory):
-    os.makedirs(persist_directory)
-    
-client = Client(
-    Settings(
-        chroma_db_impl="duckdb+parquet",
-        persist_directory=persist_directory,
-        anonymized_telemetry=False,  # Optional: disable telemetry
-        is_persistent=True
-    )
-)
+import shutil
+
+# Clear existing DB if needed
+if os.path.exists(persist_directory):
+    shutil.rmtree(persist_directory)
+os.makedirs(persist_directory)
+
+# Then proceed with the initialization as above
 
 from langchain_chroma import Chroma
 
