@@ -193,6 +193,11 @@ from chromadb import Client
 
 from langchain_chroma import Chroma
 
+persist_directory = "./chroma_db"
+if not os.path.exists(persist_directory):
+    os.makedirs(persist_directory)
+
+
 collection_name = "my_collection"
 vectorstore = Chroma.from_documents(
     client=Client(),
