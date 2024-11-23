@@ -190,21 +190,16 @@ from langchain_community.vectorstores import Chroma
 
 from chromadb import Client
 
-# Explicit configuration
-client = Client(
-    Settings(
-        chroma_db_impl="duckdb+parquet",  # Or "rest" if using the REST API
-        persist_directory="path/to/persist"  # Specify your persistence directory
-    )
-)
-client = Client()
+
+from langchain_chroma import Chroma
+
 collection_name = "my_collection"
-vectorstore = client.from_documents(
+vectorstore = Chroma.from_documents(
+    collection_name=collection_name,
     documents=splits,
     embedding=embedding_function,
-    persist_directory="./chroma_db",
-    collection_name=collection_name
-)
+    persist_directory="./chroma_db"
+    )
 if __name__=='__main__':
     print("Vector store created and persisted to './chroma_db'")
 
