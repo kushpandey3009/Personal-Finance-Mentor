@@ -204,14 +204,26 @@ os.makedirs(persist_directory)
 
 import os
 import shutil
-from chromadb import PersistentClient  # Changed from Client
+from chromadb import PersistentClient, HttpClient,  # Changed from Client
 from langchain_community.vectorstores import Chroma  # Changed from langchain_chroma
 
 
-# Initialize ChromaDB with PersistentClient
-chroma_client = PersistentClient(
-    path=persist_directory
-)
+try:
+    chroma_client = HttpClient(
+        host=os.getenv("DB_HOST", "localhost"),  # Default to localhost if not set
+        port=26855,  # Default ChromaDB port
+        settings=Settings(
+            allow_reset=True,
+            anonymized_telemetry=False
+        ),
+        retry_on_error=True  # Add retry logic
+    )
+except Exception as e:
+    print(f"Failed to connect to ChromaDB server: {e}")
+    # Fallback to persistent client if HTTP fails
+    chroma_client = PersistentClient(path="./chroma_db")
+
+
 import chromadb
 chroma_client = chromadb.HttpClient(
     host=os.getenv("DB_HOST"),
