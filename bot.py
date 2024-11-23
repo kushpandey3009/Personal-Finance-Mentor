@@ -188,8 +188,8 @@ if __name__=='__main__':
 from langchain_chroma import Chroma
 import chromadb
 
-# Initialize the client without persist_directory
-client = chromadb.Client()
+client = chromadb.Client(database="chroma", tenant="default_tenant")
+
 
 # Set the persist directory through configuration (if applicable)
 client.set_persist_directory('./chroma_db')
