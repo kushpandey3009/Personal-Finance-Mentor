@@ -185,71 +185,15 @@ if __name__=='__main__':
     document_embeddings = embedding_function.embed_documents([split.page_content for split in splits])
     print(document_embeddings[0][:5])  # Printing first 5 elements of the first embedding
 
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
-
-from chromadb import Client, Settings
-# Initialize ChromaDB with explicit settings
-
-import os
-import shutil
-from chromadb import HttpClient, Settings, PersistentClient
-from langchain_community.vectorstores import Chroma
-import chromadb
-# Define persistence directory
-persist_directory = "./chroma_db"
-
-# Clear existing DB if needed
-if os.path.exists(persist_directory):
-    shutil.rmtree(persist_directory)
-os.makedirs(persist_directory)
-
-# Initialize HTTP client for Aiven MySQL
-try:
-    chroma_client = HttpClient(
-        host=os.getenv("DB_HOST", "mysql-9422927-nikhivishwa-24f5.b.aivencloud.com"),
-        port=int(os.getenv("DB_PORT", 26855)),
-        settings=Settings(
-            allow_reset=True,
-            anonymized_telemetry=False,
-            chroma_server_auth_credentials=f"{os.getenv('DB_USER')}:{os.getenv('DB_SECRET')}"  # Add authentication
-        ),
-        ssl=True,  # Enable SSL for Aiven
-        retry_on_error=True
+collection_name = "my_collection"
+vectorstore = Chroma.from_documents(
+    collection_name=collection_name,
+    documents=splits,
+    embedding=embedding_function,
+    persist_directory="./"
     )
-
-    # Explicitly create collection first
-    collection = chroma_client.create_collection(
-        name="my_collection",
-        metadata={"hnsw:space": "cosine"}
-    )
-
-    # Create vectorstore
-    vectorstore = Chroma.from_documents(
-        documents=splits,
-        embedding=embedding_function,
-        collection_name="my_collection",
-        client=chroma_client
-    )
-
-    # Make sure to persist
-    vectorstore.persist()
-
-except Exception as e:
-    print(f"Failed to connect to ChromaDB server: {e}")
-    # Fallback to local persistent storage if remote connection fails
-    chroma_client = chromadb.PersistentClient(path=persist_directory)
-    
-    vectorstore = Chroma.from_documents(
-        documents=splits,
-        embedding=embedding_function,
-        persist_directory=persist_directory,
-        collection_name="my_collection",
-        client=chroma_client
-    )
-    vectorstore.persist()
-
-
 if __name__=='__main__':
     print("Vector store created and persisted to './chroma_db'")
 
