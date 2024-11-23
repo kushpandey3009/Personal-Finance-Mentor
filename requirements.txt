@@ -16,7 +16,7 @@ certifi==2024.8.30
 cffi==1.17.1
 charset-normalizer==3.4.0
 chroma-hnswlib
-chromadb
+chromadb==0.3.29
 sqlite3
 click==8.1.7
 colorama==0.4.6
