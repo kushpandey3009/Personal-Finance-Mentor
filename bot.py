@@ -188,14 +188,26 @@ if __name__=='__main__':
 from langchain_community.vectorstores import Chroma
 
 
-from chromadb import Client
+from chromadb import Client, Settings
+# Initialize ChromaDB with explicit settings
 
-
-from langchain_chroma import Chroma
 
 persist_directory = "./chroma_db"
 if not os.path.exists(persist_directory):
     os.makedirs(persist_directory)
+    
+client = Client(
+    Settings(
+        chroma_db_impl="duckdb+parquet",
+        persist_directory=persist_directory,
+        anonymized_telemetry=False,  # Optional: disable telemetry
+        is_persistent=True
+    )
+)
+
+from langchain_chroma import Chroma
+
+
 
 
 collection_name = "my_collection"
