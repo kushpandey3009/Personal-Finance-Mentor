@@ -186,7 +186,9 @@ if __name__=='__main__':
     print(document_embeddings[0][:5])  # Printing first 5 elements of the first embedding
 
 from langchain_chroma import Chroma
+import chromadb
 
+client = chromadb.Client(persist_directory='./chroma_db')
 collection_name = "my_collection"
 vectorstore = Chroma.from_documents(
     collection_name=collection_name,
