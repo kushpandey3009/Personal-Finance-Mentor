@@ -43,7 +43,19 @@ if __name__=='__main__':
 import pymysql
 
 timeout = 30
-
+def get_connection():
+    return pymysql.connect(
+        charset="utf8mb4",
+        connect_timeout=timeout,
+        cursorclass=pymysql.cursors.DictCursor,
+        db= DB_NAME,
+        host= DB_HOST,
+        password= DB_SECRET,
+        read_timeout=timeout,
+        port= int(DB_PORT),
+        user= DB_USER,
+        write_timeout=timeout,
+    )
 connection = pymysql.connect(
   charset="utf8mb4",
   connect_timeout=timeout,
@@ -192,7 +204,7 @@ vectorstore = Chroma.from_documents(
     collection_name=collection_name,
     documents=splits,
     embedding=embedding_function,
-    persist_directory="./chroma_db"
+    persist_directory="./"
     )
 if __name__=='__main__':
     print("Vector store created and persisted to './chroma_db'")
@@ -323,7 +335,8 @@ def create_application_logs():
 
 def insert_application_logs(session_id, user_query, gpt_response, model):
     # Insert a log entry into the application_logs table
-    cursor = connection.cursor()
+    cursor = get_connection()
+    cursor = cursor.cursor()
     cursor.execute('''
         INSERT INTO application_logs (session_id, user_query, gpt_response, model)
         VALUES (%s, %s, %s, %s)
@@ -332,7 +345,8 @@ def insert_application_logs(session_id, user_query, gpt_response, model):
 
 def get_chat_history(session_id):
     # Retrieve chat history for a specific session
-    cursor = connection.cursor()
+    cursor = get_connection()
+    cursor = cursor.cursor()
     cursor.execute('''
         SELECT user_query, gpt_response
         FROM application_logs
